@@ -1,8 +1,28 @@
 import React,{useState} from 'react'
 
-const CommentForm = () => {
+const CommentForm = ({setComments}) => {
   const [text,setText] = useState("")
   const [checked,setChecked] = useState(false)
+
+  // const addComments = ()=>{
+  //   setComments((prev)=>[...prev,{id:Date.now(),text:text}])
+  //   setText("")
+  // }
+
+  const postComment = async ()=>{
+    const res =  await fetch('http://localhost:5000/addcomment',{
+       method:"post",
+       headers:{
+         'Content-Type':"application/json"
+       },
+       body:JSON.stringify({
+         text:text
+       })
+     })
+       const result =  await res.json()
+      setComments((prev)=>[...prev,result])
+      setText("")
+  }
 
   return (
     <div>
@@ -23,7 +43,7 @@ const CommentForm = () => {
           </label>
          <button 
           disabled={!checked || !text} 
-          onClick={()=>console.log('clicked')}
+          onClick={postComment}
          >
            comment
          </button>
